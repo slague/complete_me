@@ -12,4 +12,6 @@ class NodeTest < Minitest::Test
     assert "c", node.value
   end
 
+
+
 end
