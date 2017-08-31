@@ -3,7 +3,6 @@ require_relative '../lib/complete_me'
 require 'minitest/pride'
 
 
-
 class CompleteMeTest < Minitest::Test
 
   def test_complete_me_exists
@@ -15,11 +14,34 @@ class CompleteMeTest < Minitest::Test
 
   def test_insert
     cm = CompleteMe.new
+    a_node = Node.new('a')
+    t_node = Node.new('t')
     cm.insert("cat")
     assert cm.root.children["c"], Node
-    # assert cm.root.children["c"].children, instance of Node with value "a"
-    # assert cm.root.children["c"].children["a"], instance of Node with value "t"
+
+    assert a_node.value, cm.root.children["c"].children['a'].value
+    assert t_node.value, cm.root.children["c"].children["a"].children['t'].value
+
     refute cm.root.children["a"]
     refute cm.root.children["t"]
+  end
+
+  def test_it_counts_words
+    cm = CompleteMe.new
+    cm.insert('cat')
+    cm.insert('cats')
+
+    assert 2, cm.count
+  end
+
+  def test_it_suggests_words
+    cm = CompleteMe.new
+    cm.insert('something')
+    cm.insert('some')
+    cm.insert('south')
+    cm.insert('sing')
+
+    assert ['something', 'some', 'south'], cm.suggest('so')
+    assert ['something', 'some', 'south', 'sing'], cm.suggest('s')
   end
 end
