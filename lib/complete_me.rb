@@ -15,15 +15,10 @@ class CompleteMe
       node.children[letter]= Node.new(letter)
     end
   end
-
-
-
-
-  # first, check the root_node's children hash, to see if the letter is in it
-  # if it's not, create a node with the value, and add it to the children hash for root_node, and recurze
-  # if it is, move to that node and call the method- recurze
-  #
-  #   increment counter
-
-
 end
+
+
+cm = CompleteMe.new
+cm.insert("cat")
+require "pry"; binding.pry
+""
