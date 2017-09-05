@@ -10,34 +10,41 @@ class CompleteMe
     @count = 0
   end
 
-  def insert(word, node=root)
-    if word.length == 0
+  def insert(word, node=root, new_word=false)
+
+    if word.length == 0 && new_word == false
+      return
+    elsif word.length == 0 && new_word == true
       node.end_of_word = true
       @count += 1
       return
     end
 
+    word = word.downcase
+
     letter = word[0]
 
     if node.children[letter]
-      insert(word.delete(letter), node.children[letter])
+      insert(word[1..-1], node.children[letter])
     else
       node.children[letter]= Node.new(letter)
-      insert(word.delete(letter), node.children[letter])
+      new_word = true
+      insert(word[1..-1], node.children[letter], new_word)
     end
   end
 
   def suggest(word, node=root)
-    base_word = word
+    base_word = word.downcase
+
     until word.empty?
       node = node.children[word[0]]
       word = word.delete(word[0])
     end
+
     CompleteMe.begin_suggestion(base_word, node)
   end
 
   def self.begin_suggestion(word, node)
-    require "pry"; binding.pry
     results = []
 
     return results if node.nil?
@@ -58,11 +65,3 @@ class CompleteMe
     dictionary.split("\n").each { |word| insert(word) }
   end
 end
-
-
-cm = CompleteMe.new
-# dictionary = File.read("/usr/share/dict/words")
-dictionary = "Abranchiata\nabranchiate\nabranchious\nabrasax\nabrase\nabrash"
-cm.populate(dictionary)
-
-cm.suggest('abra')
