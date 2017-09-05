@@ -37,6 +37,7 @@ class CompleteMe
   end
 
   def self.begin_suggestion(word, node)
+    require "pry"; binding.pry
     results = []
 
     return results if node.nil?
@@ -52,19 +53,16 @@ class CompleteMe
     end
     results.flatten
   end
+
+  def populate(dictionary)
+    dictionary.split("\n").each { |word| insert(word) }
+  end
 end
 
 
 cm = CompleteMe.new
-cm.insert("cat")
-cm.insert("car")
-cm.insert("cart")
-cm.insert("cards")
-cm.insert("computer")
-cm.insert("camp")
-cm.insert("cloud")
-cm.insert("mountain")
-cm.count
-cm.suggest('ca')
-cm.suggest('c')
-cm.suggest('z')
+# dictionary = File.read("/usr/share/dict/words")
+dictionary = "Abranchiata\nabranchiate\nabranchious\nabrasax\nabrase\nabrash"
+cm.populate(dictionary)
+
+cm.suggest('abra')

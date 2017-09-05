@@ -44,4 +44,12 @@ class CompleteMeTest < Minitest::Test
     assert ['something', 'some', 'south'], cm.suggest('so')
     assert ['something', 'some', 'south', 'sing'], cm.suggest('s')
   end
+
+  def test_it_populates
+    cm = CompleteMe.new
+    dictionary = File.read("/usr/share/dict/words")
+    cm.populate(dictionary)
+
+    assert 235886, cm.count
+  end
 end
