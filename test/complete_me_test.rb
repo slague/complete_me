@@ -52,4 +52,15 @@ class CompleteMeTest < Minitest::Test
 
     assert 235886, cm.count
   end
+
+  def test_it_selects_high_frequency_words
+    cm = CompleteMe.new
+    cm.insert('something')
+    cm.insert('some')
+    cm.insert('south')
+    cm.insert('sing')
+
+    cm.select("so", "some")
+    assert ["some", "something", "south"], cm.suggest("so")
+  end
 end

@@ -64,4 +64,20 @@ class CompleteMe
   def populate(dictionary)
     dictionary.split("\n").each { |word| insert(word) }
   end
+
+  def select(string, word)
+
+  end
 end
+
+
+cm = CompleteMe.new
+cm.insert('something')
+cm.insert('some')
+cm.insert('south')
+cm.insert('sing')
+
+# cm.select("so", "some")
+cm.suggest("so")
+require "pry"; binding.pry
+""
