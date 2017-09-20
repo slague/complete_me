@@ -19,8 +19,8 @@ class CompleteMeTest < Minitest::Test
     cm.insert("cat")
     assert cm.root.children["c"], Node
 
-    assert a_node.value, cm.root.children["c"].children['a'].value
-    assert t_node.value, cm.root.children["c"].children["a"].children['t'].value
+    assert_equal a_node.value, cm.root.children["c"].children['a'].value
+    assert_equal t_node.value, cm.root.children["c"].children["a"].children['t'].value
 
     refute cm.root.children["a"]
     refute cm.root.children["t"]
@@ -31,17 +31,32 @@ class CompleteMeTest < Minitest::Test
     cm.insert('cat')
     cm.insert('cats')
 
-    assert 2, cm.count
+    assert_equal 2, cm.count
   end
 
   def test_it_suggests_words
     cm = CompleteMe.new
-    cm.insert('something')
-    cm.insert('some')
-    cm.insert('south')
     cm.insert('sing')
+    cm.insert('some')
+    cm.insert('something')
+    cm.insert('south')
+    cm.insert('soup')
 
-    assert ['something', 'some', 'south'], cm.suggest('so')
-    assert ['something', 'some', 'south', 'sing'], cm.suggest('s')
+    assert_equal ["soup", "south", "something", "some"], cm.suggest('so')
+    assert_equal ["soup", "south", "something", "some", "sing"], cm.suggest('s')
+  end
+
+  def test_select
+    cm = CompleteMe.new
+    cm.insert('sing')
+    cm.insert('some')
+    cm.insert('something')
+    cm.insert('south')
+    cm.insert('soup')
+
+    cm.select('so', 'some')
+
+    assert_equal 1, cm.root.children["s"].children["o"].children['m'].children['e'].weight
+
   end
 end
