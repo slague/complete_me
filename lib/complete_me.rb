@@ -33,38 +33,77 @@ class CompleteMe
       node = node.children[word[0]]
       word = word.delete(word[0])
     end
-    CompleteMe.begin_suggestion(base_word, node)
+    final_array = CompleteMe.begin_suggestion(base_word, node)
+    format_display(final_array)
   end
 
   def self.begin_suggestion(word, node)
     results = []
 
-    return results if node.nil?
+    return results if node.nil? #This is for when we populate without a full dictionary. It will catch any letters that have no associated word, for example, if we don't put in any z words, and suggest z.
 
     if node.children.empty?
-      results << word
+      results << [word, node.weight]
     else node.children
-      results << word if node.end_of_word
+      results << [word, node.weight] if node.end_of_word
 
       node.children.keys.each do | child |
         results << CompleteMe.begin_suggestion((word + child), node.children[child])
       end
     end
-    results.flatten
+      results.flatten
   end
+
+  def format_display(arr)
+    count = 0
+    num = arr.length/2
+    display = []
+    num.times do |a|
+      display << [arr[count], arr[count+1]]
+      count +=2
+    end
+    build_hash(display)
+  end
+
+  def build_hash(arr)
+    hash = {}
+    arr.each do |a|
+      hash[a[0]]= a[1]
+    end
+    sort_hash(hash)
+  end
+
+  def sort_hash(hash)
+    ordered = hash.sort_by{ |k, v| v }.reverse.to_h
+    ordered.keys
+  end
+
+  def select(fragment, full_word)
+
+
+  end
+
 end
 
 
-cm = CompleteMe.new
-cm.insert("cat")
-cm.insert("car")
-cm.insert("cart")
-cm.insert("cards")
-cm.insert("computer")
-cm.insert("camp")
-cm.insert("cloud")
-cm.insert("mountain")
-cm.count
-cm.suggest('ca')
-cm.suggest('c')
-cm.suggest('z')
+# cm = CompleteMe.new
+# cm.insert('sing')
+# cm.insert('some')
+# cm.insert('something')
+# cm.insert('south')
+# cm.insert('soup')
+# cm.suggest('s')
+# require "pry"; binding.pry
+# ""
+# cm.insert("cat")
+# # cm.insert("car")
+# cm.insert("cart")
+# # cm.insert("cards")
+# # cm.insert("computer")
+# # cm.insert("camp")
+# # cm.insert("cloud")
+# # cm.insert("mountain")
+# # cm.count
+# cm.suggest('ca')
+# cm.suggest('c')
+# cm.suggest('z')
