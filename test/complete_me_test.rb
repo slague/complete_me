@@ -56,7 +56,49 @@ class CompleteMeTest < Minitest::Test
 
     cm.select('so', 'some')
 
-    assert_equal 1, cm.root.children["s"].children["o"].children['m'].children['e'].weight
+    assert_equal ({"so"=>1}), cm.root.children["s"].children["o"].children['m'].children['e'].weights
+
+    cm.select('so', 'some')
+    assert_equal ({"so"=>2}), cm.root.children["s"].children["o"].children['m'].children['e'].weights
+
+  end
+
+  def test_weighted_word
+    cm = CompleteMe.new
+    cm.insert('sing')
+    cm.insert('some')
+    cm.insert('something')
+    cm.insert('south')
+    cm.insert('soup')
+
+    cm.select('so', 'some')
+    assert_equal ["some","soup", "south", "something"], cm.suggest('so')
+
+    cm.select('so', 'some')
+    cm.select('so', 'some')
+    cm.select('so', 'south')
+
+    assert_equal ["some","south", "soup", "something"], cm.suggest('so')
+  end
+
+  def test_mutliple_fragments
+    cm = CompleteMe.new
+    cm.insert('sing')
+    cm.insert('some')
+    cm.insert('something')
+    cm.insert('south')
+    cm.insert('soup')
+
+    cm.select('so', 'some')
+    assert_equal ["some","soup", "south", "something"], cm.suggest('so')
+
+    cm.select('som', 'something')
+    cm.select('som', 'something')
+    cm.select('som', 'something')
+    cm.select('som', 'some')
+
+    assert_equal ["some","soup", "south", "something"], cm.suggest('so')
+    assert_equal ["something","some"], cm.suggest('som')
 
   end
 end
